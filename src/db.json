@@ -7,8 +7,41 @@
       "name": "John Dev",
       "phone": "081234547590",
       "remainingQuota": 2.1,
+      "totalQuota": 3,
       "quotaUnit": "GB",
-      "expiryDate": "2026-05-02"
+      "expiryDate": "2026-05-02",
+      "membership": "Premium",
+      "isActive": true,
+      "usageData": [
+        {
+          "name": "Sen",
+          "usage": 0.55
+        },
+        {
+          "name": "Sel",
+          "usage": 0.65
+        },
+        {
+          "name": "Rab",
+          "usage": 0.8
+        },
+        {
+          "name": "Kam",
+          "usage": 0.95
+        },
+        {
+          "name": "Jum",
+          "usage": 1.3
+        },
+        {
+          "name": "Sab",
+          "usage": 1.75
+        },
+        {
+          "name": "Min",
+          "usage": 1.45
+        }
+      ]
     }
   ],
   "packages": [
@@ -32,12 +65,17 @@
     },
     {
       "id": "3",
-      "name": "Paket Bulanan",
-      "description": "30GB/bulan, Masa berlaku 30 hari",
+      "name": "Paket Bulanan 30GB",
+      "description": "30GB untuk semua kebutuhan. Masa berlaku 30 hari",
       "price": 150000,
       "validity": "30 Hari",
       "category": "regular",
-      "trending": false
+      "trending": true,
+      "features": [
+        "Unlimited Social Media",
+        "Bonus streaming 5GB",
+        "Rollover kuota"
+      ]
     },
     {
       "id": "4",
@@ -51,11 +89,16 @@
     {
       "id": "5",
       "name": "Paket Gaming 15GB",
-      "description": "15GB khusus gaming, Masa berlaku 30 hari",
+      "description": "15GB khusus gaming. Masa berlaku 30 hari",
       "price": 50000,
       "validity": "30 Hari",
       "category": "trending",
-      "trending": true
+      "trending": true,
+      "features": [
+        "Low latency",
+        "Prioritas jaringan",
+        "Akses VIP game online"
+      ]
     }
   ],
   "recommendations": [
@@ -81,6 +124,22 @@
       "purchaseDate": "2025-05-02",
       "expiryDate": "2025-05-03",
       "status": "active"
+    },
+    {
+      "id": "bc1d",
+      "userId": "1",
+      "packageId": "2",
+      "purchaseDate": "2025-05-02",
+      "expiryDate": "2025-05-09",
+      "status": "active"
+    },
+    {
+      "id": "b74c",
+      "userId": "1",
+      "packageId": "5",
+      "purchaseDate": "2025-05-02",
+      "expiryDate": "2025-06-01",
+      "status": "active"
     }
   ],
   "transactions": [
@@ -101,6 +160,24 @@
       "expiryDate": "2025-05-03",
       "status": "completed",
       "amount": 10000
+    },
+    {
+      "id": "7b62",
+      "userId": "1",
+      "packageId": "2",
+      "purchaseDate": "2025-05-02",
+      "expiryDate": "2025-05-09",
+      "status": "completed",
+      "amount": 35000
+    },
+    {
+      "id": "3ec5",
+      "userId": "1",
+      "packageId": "5",
+      "purchaseDate": "2025-05-02",
+      "expiryDate": "2025-06-01",
+      "status": "completed",
+      "amount": 50000
     }
   ]
 }
