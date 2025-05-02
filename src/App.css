@@ -1,38 +1,141 @@
-.App {
+/* App styles */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-form {
+  width: 350px;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  background-color: white;
+}
+
+.login-form-title {
   text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.logo {
+  height: 40px;
+  margin-right: 16px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.header-user-info {
+  display: flex;
+  align-items: center;
+}
+
+.ant-layout-sider {
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  z-index: 10;
+}
+
+.sidebar-logo {
+  height: 32px;
+  margin: 16px;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.dashboard-card {
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  border-radius: 8px;
+}
+
+.package-card {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  transition: all 0.3s;
 }
 
-.App-link {
-  color: #61dafb;
+.package-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+.package-card-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.package-card-price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1890ff;
+  margin-bottom: 16px;
+}
+
+.transactions-table {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.package-status {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.package-status-active {
+  background-color: #e6f7ff;
+  color: #1890ff;
+  border: 1px solid #91d5ff;
+}
+
+.package-status-expired {
+  background-color: #fff1f0;
+  color: #ff4d4f;
+  border: 1px solid #ffa39e;
+}
+
+.dashboard-welcome {
+  margin-bottom: 24px;
+}
+
+.dashboard-subtitle {
+  color: #8c8c8c;
+  font-size: 14px;
+}
+
+.dashboard-chart-container {
+  height: 300px;
+  margin-top: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .login-form {
+    width: 90%;
+    max-width: 350px;
   }
 }
