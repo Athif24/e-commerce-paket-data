@@ -1,94 +1,106 @@
 {
-    "users": [
-      {
-        "id": "1",
-        "username": "customer1",
-        "password": "password123",
-        "name": "Maulana Anta",
-        "phone": "081234567890"
-      }
-    ],
-    "packages": [
-      {
-        "id": "1",
-        "name": "Paket Harian",
-        "description": "1GB/hari, Masa berlaku 1 hari",
-        "price": 10000,
-        "validity": "1 Hari"
-      },
-      {
-        "id": "2",
-        "name": "Paket Mingguan",
-        "description": "5GB/minggu, Masa berlaku 7 hari",
-        "price": 35000,
-        "validity": "7 Hari"
-      },
-      {
-        "id": "3",
-        "name": "Paket Bulanan",
-        "description": "30GB/bulan, Masa berlaku 30 hari",
-        "price": 150000,
-        "validity": "30 Hari"
-      }
-    ],
-    "activePackages": [
-      {
-        "id": "1",
-        "userId": "1",
-        "packageId": "2",
-        "purchaseDate": "2023-05-01",
-        "expiryDate": "2023-05-08",
-        "status": "inactive"
-      },
-      {
-        "id": "4913",
-        "userId": "1",
-        "packageId": "1",
-        "purchaseDate": "2025-05-01",
-        "expiryDate": "2025-05-02",
-        "status": "active"
-      }
-    ],
-    "transactions": [
-      {
-        "id": "1",
-        "userId": "1",
-        "packageId": "2",
-        "purchaseDate": "2023-05-01",
-        "expiryDate": "2023-05-08",
-        "status": "completed",
-        "amount": 35000
-      },
-      {
-        "id": "a199",
-        "userId": "1",
-        "packageId": "1",
-        "purchaseDate": "2025-05-01",
-        "expiryDate": "2025-05-02",
-        "status": "completed",
-        "amount": 10000
-      }
-    ],
-    "packageHistory": [
-      {
-        "id": "1",
-        "userId": "1",
-        "packageId": "1",
-        "purchaseDate": "2023-04-20",
-        "expiryDate": "2023-04-21",
-        "status": "expired"
-      },
-      {
-        "id": "1",
-        "name": "Paket Mingguan",
-        "description": "5GB/minggu, Masa berlaku 7 hari",
-        "price": 35000,
-        "validity": "7 Hari",
-        "userId": "1",
-        "packageId": "2",
-        "purchaseDate": "2023-05-01",
-        "expiryDate": "2023-05-08",
-        "status": "replaced"
-      }
-    ]
-  }
+  "users": [
+    {
+      "id": "1",
+      "username": "customer1",
+      "password": "password123",
+      "name": "John Dev",
+      "phone": "081234547590",
+      "remainingQuota": 2.1,
+      "quotaUnit": "GB",
+      "expiryDate": "2026-05-02"
+    }
+  ],
+  "packages": [
+    {
+      "id": "1",
+      "name": "Paket Harian",
+      "description": "1GB/hari, Masa berlaku 1 hari",
+      "price": 10000,
+      "validity": "1 Hari",
+      "category": "regular",
+      "trending": false
+    },
+    {
+      "id": "2",
+      "name": "Paket Mingguan",
+      "description": "5GB/minggu, Masa berlaku 7 hari",
+      "price": 35000,
+      "validity": "7 Hari",
+      "category": "regular",
+      "trending": false
+    },
+    {
+      "id": "3",
+      "name": "Paket Bulanan",
+      "description": "30GB/bulan, Masa berlaku 30 hari",
+      "price": 150000,
+      "validity": "30 Hari",
+      "category": "regular",
+      "trending": false
+    },
+    {
+      "id": "4",
+      "name": "Paket 10GB",
+      "description": "10GB, Masa berlaku 30 hari",
+      "price": 25000,
+      "validity": "30 Hari",
+      "category": "recommended",
+      "trending": false
+    },
+    {
+      "id": "5",
+      "name": "Paket Gaming 15GB",
+      "description": "15GB khusus gaming, Masa berlaku 30 hari",
+      "price": 50000,
+      "validity": "30 Hari",
+      "category": "trending",
+      "trending": true
+    }
+  ],
+  "recommendations": [
+    {
+      "id": "1",
+      "packageId": "4",
+      "reason": "Paket paling hemat untuk kebutuhan bulanan"
+    }
+  ],
+  "activePackages": [
+    {
+      "id": "1",
+      "userId": "1",
+      "packageId": "3",
+      "purchaseDate": "2025-05-01",
+      "expiryDate": "2025-05-31",
+      "status": "active"
+    },
+    {
+      "id": "2c19",
+      "userId": "1",
+      "packageId": "1",
+      "purchaseDate": "2025-05-02",
+      "expiryDate": "2025-05-03",
+      "status": "active"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "1",
+      "userId": "1",
+      "packageId": "3",
+      "purchaseDate": "2025-05-01",
+      "expiryDate": "2025-05-31",
+      "status": "completed",
+      "amount": 150000
+    },
+    {
+      "id": "aaba",
+      "userId": "1",
+      "packageId": "1",
+      "purchaseDate": "2025-05-02",
+      "expiryDate": "2025-05-03",
+      "status": "completed",
+      "amount": 10000
+    }
+  ]
+}
