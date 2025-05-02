@@ -210,12 +210,6 @@ const Header = () => {
           >
             <MenuItem onClick={() => {
               handleClose();
-              navigate('/customer/profile');
-            }}>
-              <AccountCircleIcon sx={{ mr: 1, color: '#667eea' }} /> Profile
-            </MenuItem>
-            <MenuItem onClick={() => {
-              handleClose();
               handleLogout();
             }}>
               <LogoutIcon sx={{ mr: 1, color: '#667eea' }} /> Logout

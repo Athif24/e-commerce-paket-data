@@ -13,7 +13,8 @@ import {
   Divider,
   IconButton,
   Slide,
-  useTheme
+  useTheme,
+  Grid
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import RecommendIcon from '@mui/icons-material/Recommend';
@@ -54,117 +55,133 @@ const Recommendation = ({ recommendation, packages, onPurchase }) => {
   return (
     <>
       <Paper sx={{ 
-        borderRadius: 3,
+        borderRadius: 2,
         p: 0,
-        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
+        boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.06)',
         height: '100%',
         overflow: 'hidden',
-        position: 'relative',
-        transition: 'all 0.3s ease',
-        '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: '0 12px 30px rgba(0, 0, 0, 0.12)',
-        }
+        position: 'relative'
       }}>
-        {/* Header with gradient */}
-        <Box sx={{ 
-          backgroundColor: theme.palette.primary.main,
-          backgroundImage: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-          p: 3,
-          position: 'relative',
-          color: 'white',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start'
-        }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-            <RecommendIcon sx={{ mr: 1 }} />
-            <Typography variant="subtitle1" sx={{ fontWeight: '600' }}>
-              Rekomendasi Paket
-            </Typography>
-          </Box>
+        <Grid container>
+          {/* Left Content */}
+          <Grid item xs={12} md={8}>
+            <Box sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                <RecommendIcon sx={{ mr: 1, color: '#5e72e4' }} />
+              </Box>
+              
+              <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>
+                {recommendedPackage.name}
+              </Typography>
+              
+              <Typography variant="body2" sx={{ color: '#8898aa', mb: 2 }}>
+                Paket paling hemat untuk kebutuhan bulanan
+              </Typography>
+              
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold', mr: 1, color: '#5e72e4' }}>
+                  Rp {recommendedPackage.price.toLocaleString('id-ID')}
+                </Typography>
+                <Chip 
+                  label="HEMAT" 
+                  size="small" 
+                  sx={{ 
+                    bgcolor: 'rgba(94, 114, 228, 0.1)', 
+                    color: '#5e72e4',
+                    fontWeight: 'bold',
+                    fontSize: '0.7rem'
+                  }} 
+                />
+              </Box>
+              
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: 2,
+                mb: 3 
+              }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <WifiIcon sx={{ color: '#5e72e4', mr: 1.5 }} />
+                  <Typography>10GB Kuota Internet</Typography>
+                </Box>
+                
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <AccessTimeIcon sx={{ color: '#5e72e4', mr: 1.5 }} />
+                  <Typography>Masa berlaku 30 hari</Typography>
+                </Box>
+                
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <SpeedIcon sx={{ color: '#5e72e4', mr: 1.5 }} />
+                  <Typography>Kecepatan hingga 42 Mbps</Typography>
+                </Box>
+              </Box>
+              
+              <Box>
+                <Button 
+                  variant="contained" 
+                  onClick={handleOpen}
+                  startIcon={<ShoppingCartIcon />}
+                  disableElevation
+                  sx={{
+                    fontWeight: 'bold',
+                    borderRadius: 2,
+                    px: 3,
+                    py: 1,
+                    textTransform: 'none',
+                    fontSize: '0.9rem',
+                    bgcolor: '#5e72e4',
+                    '&:hover': {
+                      bgcolor: '#4454bd',
+                    }
+                  }}
+                >
+                  Beli Sekarang
+                </Button>
+              </Box>
+            </Box>
+          </Grid>
           
-          <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-            {recommendedPackage.name}
-          </Typography>
-          
-          <Typography variant="body2" sx={{ opacity: 0.9, mb: 2 }}>
-            Paket paling hemat untuk kebutuhan bulanan
-          </Typography>
-          
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography variant="h5" sx={{ fontWeight: 'bold', mr: 1 }}>
-              Rp {recommendedPackage.price.toLocaleString('id-ID')}
-            </Typography>
-            <Chip 
-              label="HEMAT" 
-              size="small" 
-              sx={{ 
-                bgcolor: 'rgba(255, 255, 255, 0.2)', 
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: '0.7rem'
-              }} 
-            />
-          </Box>
-        </Box>
-        
-        {/* Content body */}
-        <Box sx={{ p: 3, bgcolor: 'white' }}>
-          <Box sx={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: 2,
-            mb: 3 
+          {/* Right Image/Banner */}
+          <Grid item xs={12} md={4} sx={{ 
+            bgcolor: '#5e72e4',
+            backgroundImage: 'linear-gradient(135deg, #5e72e4 0%, #825ee4 100%)',
+            display: { xs: 'none', md: 'flex' },
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: 'white',
+            p: 3,
+            position: 'relative'
           }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <WifiIcon sx={{ color: theme.palette.primary.main, mr: 1.5 }} />
-              <Typography>10GB Kuota Internet</Typography>
+            <Box sx={{ 
+              position: 'absolute', 
+              top: 0, 
+              left: 0, 
+              width: '100%', 
+              height: '100%', 
+              opacity: 0.1,
+              backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
+              backgroundSize: '20px 20px'
+            }} />
+            <Box sx={{ zIndex: 1, textAlign: 'center' }}>
+              <Typography variant="h4" fontWeight="bold" gutterBottom>
+                10GB
+              </Typography>
+              <Typography variant="body1" sx={{ opacity: 0.9, mb: 2 }}>
+                Kuota Internet
+              </Typography>
+              <Chip 
+                label="REKOMENDASI" 
+                size="small" 
+                sx={{ 
+                  bgcolor: 'rgba(255, 255, 255, 0.2)', 
+                  color: 'white',
+                  fontWeight: 'bold'
+                }} 
+              />
             </Box>
-            
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <AccessTimeIcon sx={{ color: theme.palette.primary.main, mr: 1.5 }} />
-              <Typography>Masa berlaku 30 hari</Typography>
-            </Box>
-            
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <SpeedIcon sx={{ color: theme.palette.primary.main, mr: 1.5 }} />
-              <Typography>Kecepatan hingga 42 Mbps</Typography>
-            </Box>
-          </Box>
-          
-          <Box 
-            sx={{ 
-              display: 'flex', 
-              justifyContent: 'center', 
-              mt: 2 
-            }}
-          >
-            <Button 
-              variant="contained" 
-              onClick={handleOpen}
-              size="large"
-              startIcon={<ShoppingCartIcon />}
-              disableElevation
-              sx={{
-                fontWeight: 'bold',
-                borderRadius: 3,
-                px: 4,
-                py: 1.5,
-                textTransform: 'none',
-                fontSize: '1rem',
-                bgcolor: theme.palette.primary.main,
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  bgcolor: theme.palette.primary.dark,
-                  transform: 'scale(1.03)'
-                }
-              }}
-            >
-              Beli Sekarang
-            </Button>
-          </Box>
-        </Box>
+          </Grid>
+        </Grid>
       </Paper>
 
       <Dialog 
@@ -175,14 +192,14 @@ const Recommendation = ({ recommendation, packages, onPurchase }) => {
         TransitionComponent={Transition}
         PaperProps={{
           sx: {
-            borderRadius: 3,
+            borderRadius: 2,
             boxShadow: '0 12px 32px rgba(0, 0, 0, 0.15)',
             overflow: 'hidden'
           }
         }}
       >
         <DialogTitle sx={{ 
-          bgcolor: theme.palette.primary.main,
+          bgcolor: '#5e72e4',
           color: 'white',
           display: 'flex',
           justifyContent: 'space-between',
@@ -219,7 +236,7 @@ const Recommendation = ({ recommendation, packages, onPurchase }) => {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 2 }}>
               {(recommendedPackage.features || ['10GB Kuota Internet', 'Masa berlaku 30 hari', 'Bonus streaming tanpa kuota']).map((feature, index) => (
                 <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
-                  <CheckCircleIcon sx={{ color: theme.palette.success.main, mr: 1.5, fontSize: '1.2rem' }} />
+                  <CheckCircleIcon sx={{ color: '#2dce89', mr: 1.5, fontSize: '1.2rem' }} />
                   <Typography>{feature}</Typography>
                 </Box>
               ))}
@@ -230,7 +247,7 @@ const Recommendation = ({ recommendation, packages, onPurchase }) => {
           
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
             <Typography variant="body1">Total Pembayaran:</Typography>
-            <Typography variant="h5" fontWeight="bold" color="primary">
+            <Typography variant="h5" fontWeight="bold" color="#5e72e4">
               Rp {recommendedPackage.price.toLocaleString('id-ID')}
             </Typography>
           </Box>
@@ -245,11 +262,11 @@ const Recommendation = ({ recommendation, packages, onPurchase }) => {
               px: 3,
               textTransform: 'none',
               fontWeight: 'medium',
-              borderColor: theme.palette.grey[300],
-              color: theme.palette.text.primary,
+              borderColor: '#e9ecef',
+              color: '#8898aa',
               '&:hover': {
-                borderColor: theme.palette.grey[400],
-                bgcolor: theme.palette.grey[50]
+                borderColor: '#cfd4da',
+                bgcolor: '#f6f9fc'
               }
             }}
           >
@@ -264,9 +281,9 @@ const Recommendation = ({ recommendation, packages, onPurchase }) => {
               px: 3,
               textTransform: 'none',
               fontWeight: 'bold',
-              bgcolor: theme.palette.primary.main,
+              bgcolor: '#5e72e4',
               '&:hover': {
-                bgcolor: theme.palette.primary.dark
+                bgcolor: '#4454bd'
               }
             }}
           >

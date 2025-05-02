@@ -27,40 +27,27 @@ const UserGreeting = ({ user }) => {
       backgroundColor: 'white',
       borderRadius: 2,
       p: 3,
-      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+      boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.06)',
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
       position: 'relative',
       overflow: 'hidden',
-      backgroundImage: 'linear-gradient(135deg, rgba(25, 118, 210, 0.03) 0%, rgba(25, 118, 210, 0.1) 100%)'
     }}>
-      <Box 
-        sx={{ 
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '4px',
-          background: 'linear-gradient(90deg, #1976d2, #64b5f6)',
-        }}
-      />
-      
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
         <Avatar 
           alt={user?.name || "John Dev"}
           sx={{ 
-            width: 48, 
-            height: 48, 
-            bgcolor: 'primary.main',
-            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+            width: 46, 
+            height: 46, 
+            bgcolor: '#5e72e4',
             mr: 2
           }}
         />
         
         <Box>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <Typography variant="h5" sx={{ 
+            <Typography variant="h6" sx={{ 
               fontWeight: 'bold',
               color: '#2c3e50',
               mr: 1
@@ -81,7 +68,7 @@ const UserGreeting = ({ user }) => {
           label={user?.membership || "Premium"} 
           size="small"
           sx={{ 
-            bgcolor: '#1976d2', 
+            bgcolor: '#5e72e4', 
             color: 'white',
             fontWeight: 'bold',
             '& .MuiChip-label': { px: 1 }
@@ -93,7 +80,7 @@ const UserGreeting = ({ user }) => {
             label="Aktif" 
             size="small"
             sx={{ 
-              bgcolor: '#4caf50', 
+              bgcolor: '#2dce89', 
               color: 'white',
               fontWeight: 'medium',
               '& .MuiChip-label': { px: 1 }

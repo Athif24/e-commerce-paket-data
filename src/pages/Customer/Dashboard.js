@@ -7,18 +7,21 @@ import {
   Alert,
   useTheme,
   useMediaQuery,
-  Fade,
   Grow,
   Typography,
-  CircularProgress
+  CircularProgress,
+  Paper,
+  Divider
 } from '@mui/material';
-import axios from 'axios';
 import { motion } from 'framer-motion';
 import UserGreeting from '../../components/Dashboard/UserGreeting';
 import QuotaInfo from '../../components/Dashboard/QuotaInfo';
 import Recommendation from '../../components/Dashboard/Recommendation';
 import UsageChart from '../../components/Dashboard/UsageChart';
 import TrendingPackages from '../../components/Dashboard/TrendingPackages';
+
+// Mengimpor data dummy langsung untuk fallback
+import dummyData from '../../db.json';
 
 // Animation variants for staggered children
 const containerVariants = {
@@ -44,6 +47,19 @@ const itemVariants = {
   }
 };
 
+// Helper function untuk kalkulasi penggunaan
+const generateUsageData = () => {
+  return [
+    { name: 'Sen', usage: Math.random() * 0.7 + 0.3 },
+    { name: 'Sel', usage: Math.random() * 0.7 + 0.3 },
+    { name: 'Rab', usage: Math.random() * 0.7 + 0.3 },
+    { name: 'Kam', usage: Math.random() * 0.7 + 0.3 },
+    { name: 'Jum', usage: Math.random() * 0.7 + 0.3 },
+    { name: 'Sab', usage: Math.random() * 1 + 0.4 },
+    { name: 'Min', usage: Math.random() * 1 + 0.4 },
+  ];
+};
+
 const Dashboard = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -55,23 +71,34 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
+  const [usageData, setUsageData] = useState([]);
+  const [activePackages, setActivePackages] = useState([]);
 
   useEffect(() => {
+    // Fungsi untuk mengambil data dari API atau fallback ke data dummy
     const fetchData = async () => {
       try {
-        // Simulate loading with a small delay for better UX
-        setTimeout(async () => {
-          // Fetch user data
-          const userRes = await axios.get('http://localhost:3000/users/1');
-          setUser(userRes.data);
+        // Simulasi loading dengan delay kecil untuk UX yang lebih baik
+        setTimeout(() => {
+          // Menggunakan data langsung dari db.json
+          const userData = dummyData.users[0];
+          // Tambahkan data penggunaan yang digenerate ke user
+          userData.usageData = generateUsageData();
+          setUser(userData);
 
-          // Fetch packages
-          const packagesRes = await axios.get('http://localhost:3000/packages');
-          setPackages(packagesRes.data);
+          // Mengambil data paket
+          const packagesData = dummyData.packages;
+          setPackages(packagesData);
 
-          // Fetch recommendation
-          const recommendationRes = await axios.get('http://localhost:3000/recommendations/1');
-          setRecommendation(recommendationRes.data);
+          // Mengambil rekomendasi
+          const recommendationData = dummyData.recommendations[0];
+          setRecommendation(recommendationData);
+
+          // Mengambil paket aktif
+          const activePackagesData = dummyData.activePackages.filter(
+            pkg => pkg.userId === userData.id && pkg.status === 'active'
+          );
+          setActivePackages(activePackagesData);
 
           setLoading(false);
         }, 1000);
@@ -84,51 +111,76 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
+  // Fungsi untuk mendapatkan kuota paket berdasarkan nama atau deskripsi
+  const getPackageQuota = (packageData) => {
+    if (!packageData) return 0;
+    
+    // Ekstrak angka dari nama paket atau deskripsi
+    // Contoh: "Paket 10GB" -> 10, atau "5GB/minggu" -> 5
+    const quotaMatch = packageData.name.match(/(\d+)GB/) ||
+      packageData.description.match(/(\d+)GB/);
+    
+    return quotaMatch ? parseFloat(quotaMatch[1]) : 0;
+  };
+
   const handlePurchase = async (pkg) => {
     try {
       setLoading(true);
-      const storedUser = JSON.parse(localStorage.getItem('user')) || user;
+      
+      // Gunakan data dari state
+      const storedUser = user;
       const today = new Date();
       const expiryDate = new Date();
-      expiryDate.setDate(today.getDate() + parseInt(pkg.validity?.split(' ')[0] || 30));
+      
+      // Ekstrak jumlah hari dari validitas paket
+      const validityDays = parseInt(pkg.validity?.split(' ')[0] || 30);
+      expiryDate.setDate(today.getDate() + validityDays);
+      
       const formatDate = (date) => date.toISOString().split('T')[0];
 
-      // Setelah membuat transaksi
-      await axios.post('http://localhost:3000/transactions', {
+      // Buat ID unik untuk transaksi dan paket aktif baru
+      const newTransactionId = `tr-${Date.now()}`;
+      const newActivePackageId = `pkg-${Date.now()}`;
+
+      // Simulasi pembuatan transaksi baru
+      const newTransaction = {
+        id: newTransactionId,
         userId: storedUser.id,
         packageId: pkg.id,
         purchaseDate: formatDate(today),
         expiryDate: formatDate(expiryDate),
         status: 'completed',
         amount: pkg.price
-      });
-
-      // Tambahkan fungsi untuk mendapatkan kuota paket
-      const getPackageQuota = (packageId) => {
-        const packageData = packages.find(p => p.id === packageId);
-        // Ekstrak angka dari nama paket atau deskripsi
-        // Contoh: "Paket 10GB" -> 10
-        const quotaMatch = packageData?.name.match(/(\d+)GB/) ||
-          packageData?.description.match(/(\d+)GB/);
-        return quotaMatch ? parseFloat(quotaMatch[1]) : 0;
       };
 
-      // Perbarui data pengguna (menambahkan kuota)
-      const packageQuota = getPackageQuota(pkg.id);
-      const updatedQuota = user.remainingQuota + packageQuota;
+      // Simulasi pembuatan paket aktif baru
+      const newActivePackage = {
+        id: newActivePackageId,
+        userId: storedUser.id,
+        packageId: pkg.id,
+        purchaseDate: formatDate(today),
+        expiryDate: formatDate(expiryDate),
+        status: 'active'
+      };
 
-      await axios.patch(`http://localhost:3000/users/${storedUser.id}`, {
-        remainingQuota: updatedQuota,
+      // Dapatkan kuota dari paket yang dibeli
+      const packageQuota = getPackageQuota(pkg);
+      
+      // Perbarui data pengguna (tambahkan kuota)
+      const updatedUser = {
+        ...storedUser,
+        remainingQuota: storedUser.remainingQuota + packageQuota,
         expiryDate: formatDate(expiryDate) // Perbarui tanggal kedaluwarsa
-      });
+      };
 
-      setSuccess(`Paket ${pkg.name} berhasil dibeli! Quota Anda telah diperbarui.`);
+      // Update state dengan data yang baru
+      setUser(updatedUser);
+      setActivePackages([...activePackages, newActivePackage]);
+      
+      // Tampilkan pesan sukses
+      setSuccess(`Paket ${pkg.name} berhasil dibeli! Kuota Anda telah diperbarui menjadi ${updatedUser.remainingQuota} ${updatedUser.quotaUnit}`);
       setTimeout(() => setSuccess(''), 5000);
-
-      // Kemudian refresh data pengguna
-      const userRes = await axios.get(`http://localhost:3000/users/${storedUser.id}`);
-      setUser(userRes.data);
-
+      
       setLoading(false);
     } catch (error) {
       console.error('Error purchasing package:', error);
@@ -137,40 +189,26 @@ const Dashboard = () => {
     }
   };
 
-  if (loading && !user) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '80vh',
-          flexDirection: 'column',
-          gap: 2
-        }}
-      >
-        <CircularProgress size={60} thickness={4} />
-        <Typography variant="h6" color="text.secondary">
-          Memuat dashboard Anda...
-        </Typography>
-      </Box>
-    );
-  }
+  // Find a second recommendation package
+  const secondRecommendedPackage = packages.find(pkg => 
+    pkg.id !== recommendation?.packageId && 
+    (pkg.category === 'recommended' || pkg.price > 0)
+  );
 
   return (
     <Container
-      maxWidth={isLargeScreen ? "lg" : "md"}
+      maxWidth="xl"
       component={motion.div}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       sx={{
-        py: 4,
-        px: { xs: 2, sm: 3, md: 4 },
+        py: 3,
+        px: { xs: 2, sm: 3, md: 3 },
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        width: '100%'
+        width: '100%',
+        bgcolor: '#f5f7fa'
       }}
     >
       {success && (
@@ -208,55 +246,86 @@ const Dashboard = () => {
         </Grow>
       )}
 
-      <Grid
-        container
-        spacing={3}
-        sx={{
-          justifyContent: 'center',
-          width: '100%',
-          maxWidth: isLargeScreen ? 1200 : '100%'
-        }}
-      >
-        <Grid container item xs={12} spacing={3} sx={{ justifyContent: 'center' }}>
-          {/* Left side (stacked components) */}
-          <Grid item xs={12} md={6} lg={6} container direction="column" spacing={3}>
-            {/* Top Left - User Greeting */}
-            <Grid item component={motion.div} variants={itemVariants}>
-              <UserGreeting user={user} />
-            </Grid>
+      {/* Top Row */}
+      <Grid container spacing={3} sx={{ mb: 3 }}>
+        {/* Combined UserGreeting and QuotaInfo */}
+        <Grid item xs={12} md={6} component={motion.div} variants={itemVariants}>
+          <Paper sx={{ 
+            backgroundColor: 'white',
+            borderRadius: 2,
+            boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.06)',
+            height: '100%',
+            overflow: 'hidden'
+          }}>
+            {/* UserGreeting section */}
+            <Box sx={{ p: 3 }}>
+              <UserGreeting user={user} insideCombinedCard={true} />
+            </Box>
+            
+            <Divider sx={{ mx: 3 }} />
+            
+            {/* QuotaInfo section */}
+            <Box sx={{ p: 3 }}>
+              <QuotaInfo 
+                user={user} 
+                activePackages={activePackages}
+                packages={packages}
+                insideCombinedCard={true}
+              />
+            </Box>
+          </Paper>
+        </Grid>
+        
+        {/* UsageChart */}
+        <Grid item xs={12} md={6} component={motion.div} variants={itemVariants}>
+          <UsageChart data={user?.usageData} />
+        </Grid>
+      </Grid>
 
-            {/* Bottom Left - Quota Info */}
-            <Grid item component={motion.div} variants={itemVariants}>
-              <QuotaInfo user={user} />
-            </Grid>
+      {/* Middle Row - Recommendations */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, pl: 1 }}>
+          Rekomendasi Paket Data
+        </Typography>
+        <Grid container spacing={3}>
+          {/* First Recommendation */}
+          <Grid item xs={12} md={6} component={motion.div} variants={itemVariants}>
+            <Recommendation
+              recommendation={recommendation}
+              packages={packages}
+              onPurchase={handlePurchase}
+              loading={loading}
+            />
           </Grid>
-
-          {/* Right side (Recommendation - tall card) */}
-          <Grid item xs={12} md={6} lg={6} component={motion.div} variants={itemVariants}>
-            <Box sx={{ height: '100%' }}>
+          
+          {/* Second Recommendation */}
+          <Grid item xs={12} md={6} component={motion.div} variants={itemVariants}>
+            {secondRecommendedPackage && (
               <Recommendation
-                recommendation={recommendation}
+                recommendation={{ packageId: secondRecommendedPackage.id }}
                 packages={packages}
                 onPurchase={handlePurchase}
                 loading={loading}
               />
-            </Box>
+            )}
           </Grid>
         </Grid>
+      </Box>
 
-        {/* Second row */}
-        <Grid container item xs={12} spacing={3} sx={{ justifyContent: 'center', mt: 1 }}>
-          {/* Left (Usage Chart) */}
-          <Grid item xs={12} md={6} lg={6} component={motion.div} variants={itemVariants}>
-            <UsageChart data={user?.usageData} />
-          </Grid>
-
-          {/* Right (Trending Packages) */}
-          <Grid item xs={12} md={6} lg={6} component={motion.div} variants={itemVariants}>
-            <TrendingPackages packages={packages} />
+      {/* Bottom Row - Trending Packages */}
+      <Box>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, pl: 1 }}>
+          Trending Paket Data
+        </Typography>
+        <Grid container spacing={3}>
+          <Grid item xs={12} component={motion.div} variants={itemVariants}>
+            <TrendingPackages 
+              packages={packages} 
+              onPurchase={handlePurchase}
+            />
           </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </Container>
   );
 };

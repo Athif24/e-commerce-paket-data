@@ -1,12 +1,13 @@
-// QuotaInfo.js
+//QuotaInfo.js
 import React from 'react';
-import { Box, Typography, LinearProgress, Paper, Tooltip, Button } from '@mui/material';
+import { Box, Typography, LinearProgress, Paper, Tooltip, Button, Chip, Divider } from '@mui/material';
 import DataUsageIcon from '@mui/icons-material/DataUsage';
 import TimerIcon from '@mui/icons-material/Timer';
 import SpeedIcon from '@mui/icons-material/Speed';
+import VerifiedIcon from '@mui/icons-material/Verified';
 import { useNavigate } from 'react-router-dom';
 
-const QuotaInfo = ({ user }) => {
+const QuotaInfo = ({ user, activePackages = [], packages = [] }) => {
   const navigate = useNavigate();
   
   // Default values in case user data isn't available
@@ -34,39 +35,46 @@ const QuotaInfo = ({ user }) => {
   
   // Helper function to determine progress color
   const getProgressColor = (percentage) => {
-    if (percentage > 80) return '#f44336'; // Red
-    if (percentage > 60) return '#ff9800'; // Orange
-    return '#00c853'; // Green
+    if (percentage > 80) return '#f5365c'; // Red
+    if (percentage > 60) return '#fb6340'; // Orange
+    return '#2dce89'; // Green
   };
   
   const progressColor = getProgressColor(usedPercentage);
+
+  // Mendapatkan informasi paket aktif terakhir
+  const getLatestActivePackage = () => {
+    if (!activePackages || activePackages.length === 0) return null;
+    
+    // Urutkan berdasarkan tanggal pembelian terbaru
+    const sortedPackages = [...activePackages].sort((a, b) => {
+      return new Date(b.purchaseDate) - new Date(a.purchaseDate);
+    });
+    
+    const latestPackage = sortedPackages[0];
+    const packageDetails = packages.find(p => p.id === latestPackage.packageId);
+    
+    return {
+      ...latestPackage,
+      details: packageDetails
+    };
+  };
+  
+  const latestPackage = getLatestActivePackage();
   
   return (
     <Paper sx={{ 
       backgroundColor: 'white',
       borderRadius: 2,
       p: 3,
-      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+      boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.06)',
       height: '100%',
       position: 'relative',
       overflow: 'hidden',
-      backgroundImage: 'linear-gradient(135deg, rgba(25, 118, 210, 0.03) 0%, rgba(25, 118, 210, 0.1) 100%)'
     }}>
-      <Box 
-        sx={{ 
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '4px',
-          background: 'linear-gradient(90deg, #1976d2, #64b5f6)',
-        }}
-      />
-      
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-        <DataUsageIcon sx={{ fontSize: 28, color: '#1976d2', mr: 1.5 }} />
-        <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#2c3e50' }}>
-          Info Quota
+        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#2c3e50' }}>
+          Info Kuota
         </Typography>
       </Box>
       
@@ -90,8 +98,8 @@ const QuotaInfo = ({ user }) => {
               variant="determinate" 
               value={usedPercentage}
               sx={{ 
-                height: 10, 
-                borderRadius: 5, 
+                height: 8, 
+                borderRadius: 4, 
                 bgcolor: 'rgba(0, 0, 0, 0.08)',
                 '& .MuiLinearProgress-bar': {
                   bgcolor: progressColor,
@@ -128,40 +136,62 @@ const QuotaInfo = ({ user }) => {
       </Box>
       
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-        <TimerIcon sx={{ fontSize: 18, color: '#546e7a', mr: 1 }} />
+        <TimerIcon sx={{ fontSize: 18, color: '#8898aa', mr: 1 }} />
         <Typography variant="body2" color="text.secondary">
           Berlaku hingga: <span style={{ fontWeight: 'bold' }}>{formatDate(expiryDate)}</span>
         </Typography>
       </Box>
       
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-        <SpeedIcon sx={{ fontSize: 18, color: '#546e7a', mr: 1 }} />
+        <SpeedIcon sx={{ fontSize: 18, color: '#8898aa', mr: 1 }} />
         <Typography variant="body2" color="text.secondary">
-          Sisa <span style={{ fontWeight: 'bold', color: daysRemaining <= 5 ? '#f44336' : 'inherit' }}>{daysRemaining} hari</span>
+          Sisa <span style={{ fontWeight: 'bold', color: daysRemaining <= 5 ? '#f5365c' : 'inherit' }}>{daysRemaining} hari</span>
         </Typography>
       </Box>
       
-      <Box sx={{ textAlign: 'center', mt: 2 }}>
-        <Button 
-          variant="outlined" 
-          size="small"
-          onClick={() => navigate('/customer/packages')}
-          sx={{ 
-            borderRadius: '20px', 
-            fontSize: '0.8rem',
-            px: 2,
-            textTransform: 'none',
-            boxShadow: '0 2px 8px rgba(25, 118, 210, 0.15)',
-            borderColor: '#1976d2',
-            '&:hover': {
-              borderColor: '#1565c0',
-              boxShadow: '0 4px 12px rgba(25, 118, 210, 0.25)',
-            }
-          }}
-        >
-          Tambah Kuota
-        </Button>
-      </Box>
+      {/* Tampilkan paket aktif terakhir jika ada */}
+      {latestPackage && (
+        <Box sx={{ mb: 3 }}>
+          <Divider sx={{ my: 2 }} />
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+            <VerifiedIcon sx={{ fontSize: 18, color: '#2dce89', mr: 1 }} />
+            <Typography variant="body2" fontWeight="medium">
+              Paket Aktif Terbaru
+            </Typography>
+          </Box>
+          
+          <Box sx={{ 
+            p: 1.5, 
+            bgcolor: 'rgba(94, 114, 228, 0.05)', 
+            borderRadius: 1,
+            border: '1px solid rgba(94, 114, 228, 0.1)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 0.5
+          }}>
+            <Typography variant="subtitle2" fontWeight="bold" color="primary">
+              {latestPackage.details?.name || 'Paket Internet'}
+            </Typography>
+            
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Typography variant="caption" color="text.secondary">
+                Masa berlaku: {formatDate(latestPackage.expiryDate)}
+              </Typography>
+              <Chip 
+                label="Aktif" 
+                size="small"
+                sx={{ 
+                  bgcolor: '#2dce89', 
+                  color: 'white',
+                  height: 22,
+                  fontSize: '0.7rem',
+                  fontWeight: 'bold'
+                }}
+              />
+            </Box>
+          </Box>
+        </Box>
+      )}
     </Paper>
   );
 };
